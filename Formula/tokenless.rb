@@ -9,7 +9,7 @@ class Tokenless < Formula
   desc "LLM token optimization via schema/response compression, TOON encoding, and command rewriting"
   homepage "https://github.com/alibaba/anolisa"
   url "https://github.com/shiloong/anolisa/releases/download/tokenless/v0.5.1/tokenless-0.5.1.tar.gz"
-  sha256 "7ffcb001da93d890979117a9b06678be3fec5dd13cd6e9f217468d36d8d2f35f"
+  sha256 "4501dc6320020015f8a4608dfd98f2e9c9b89a8c62f9bd5ff41a4c19b96dcea8"
   license "MIT"
   version "0.5.1"
 
