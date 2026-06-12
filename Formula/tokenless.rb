@@ -8,10 +8,10 @@
 class Tokenless < Formula
   desc "LLM token optimization via schema/response compression, TOON encoding, and command rewriting"
   homepage "https://github.com/alibaba/anolisa"
-  url "https://github.com/alibaba/anolisa/releases/download/tokenless/v0.5.0/tokenless-0.5.0.tar.gz"
-  sha256 "273c7569c5cabd4eff552a3caad467460056840071447dfd0b46722a7cf5ed15"
+  url "https://github.com/shiloong/anolisa/releases/download/tokenless/v0.5.1/tokenless-0.5.1.tar.gz"
+  sha256 "7ffcb001da93d890979117a9b06678be3fec5dd13cd6e9f217468d36d8d2f35f"
   license "MIT"
-  version "0.5.0"
+  version "0.5.1"
 
   depends_on "rust" => :build
   depends_on "node" => :build
