@@ -5,7 +5,6 @@
 #
 # Install via Homebrew tap:
 #   brew tap shiloong/tap && brew install tokenless
-#   brew install --formula Formula/tokenless.rb
 class Tokenless < Formula
   desc "LLM token optimization via schema/response compression, TOON encoding, and command rewriting"
   homepage "https://github.com/alibaba/anolisa"
@@ -20,6 +19,10 @@ class Tokenless < Formula
   depends_on "jq"
 
   def install
+    # Prevent Python bytecode (__pycache__/*.pyc) from being generated during
+    # build or post-install processing inside the Homebrew sandbox.
+    ENV["PYTHONDONTWRITEBYTECODE"] = "1"
+
     # Extract adapter resources from source tarball to a staging dir within
     # buildpath. Using a dedicated subdirectory avoids interference with the
     # main cargo build while staying inside the Homebrew sandbox.
@@ -140,16 +143,26 @@ class Tokenless < Formula
     doc.install "docs/response-compression.md"
     doc.install "LICENSE"
 
-    # Cleanup staging area
+    # Cleanup staging area and Python bytecode.
     rm_rf adapter_staging
+    # Homebrew's post-install processing may generate __pycache__ after the
+    # Ruby install method completes.  The post_install hook cleans up afterwards.
+  end
+
+  def post_install
+    # Final cleanup: remove any __pycache__ generated during install or test
+    # phases (Homebrew sandbox may trigger Python bytecode compilation).
+    # Use find to recursively catch all __pycache__ directories under share/.
+    system "find", share.to_s, "-name", "__pycache__", "-type", "d", "-delete"
   end
 
   test do
+    ENV["PYTHONDONTWRITEBYTECODE"] = "1"
     assert_match version.to_s, shell_output("#{bin}/tokenless --version")
 
     # Verify rtk and toon symlinks resolve and run
-    assert_match "", shell_output("#{bin}/rtk --version 2>&1")
-    assert_match "", shell_output("#{bin}/toon --version 2>&1")
+    assert_match "rtk", shell_output("#{bin}/rtk --version 2>&1")
+    assert_match "toon", shell_output("#{bin}/toon --version 2>&1")
 
     # Verify compression works
     input = '{"name":"test","debug":null,"metadata":{"created":"2024-01-01","updated":null}}'
